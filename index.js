@@ -25,7 +25,7 @@ async function uploadLanguages() {
     for (let lang of langs) {
         console.log('===========================')
         console.log(`1. Loading lang ${lang} json`)
-        const data = await import(`./data/localization/stringtabley_en.json`, { assert: { type: "json" } })
+        const data = await import(`./data/localization/stringtabley_${lang}.json`, { assert: { type: "json" } })
         console.log(`2. Indexing lang ${lang} json`)
         const dataIndexed = data.default.stringtable.language.string.reduce((obj, { ['#text']: text, ...item }) => {
             obj[item?.['@_locid']] = { ...item, text }
