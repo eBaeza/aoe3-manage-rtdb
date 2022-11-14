@@ -17,7 +17,7 @@ const app = initializeApp({
 const auth = getAuth()
 const db = getDatabase(app);
 
-const langs = ['es', 'en', 'pt_br', 'zh']
+const langs = ['es', 'en', 'pt_br', 'zh', 'fr']
 
 async function uploadLanguages() {
     await signInWithEmailAndPassword(auth, process.env.AUTH_EMAIL, process.env.AUTH_PASS)
