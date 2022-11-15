@@ -1,5 +1,5 @@
 /node_modules
 .env
-/data
-/export/database_export
+/data/*
+/export/database_export/*
 *.log
