@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "gen:seed": "node generateSeed.js",
     "dev": "cross-env NODE_ENV=development node index.js",
     "emulators": "firebase emulators:start --only=database --import=./export --export-on-exit=./export",
     "test": "echo \"Error: no test specified\" && exit 1"

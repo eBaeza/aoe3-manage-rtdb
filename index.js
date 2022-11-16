@@ -1,7 +1,10 @@
 import { config as dotEnvConfig } from "dotenv-flow";
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { getDatabase, ref, set, connectDatabaseEmulator } from "firebase/database";
+import { getDatabase, ref, set, connectDatabaseEmulator } from "firebase/database"
+import whiteList from "./dbids/homePage.json" assert { type: 'json' };
+import deckBuilderList from "./dbids/deckBuilder.json" assert { type: 'json' };
+import unitsPage from "./dbids/unitsPage.json" assert { type: 'json' };
 
 dotEnvConfig()
 
@@ -38,9 +41,28 @@ async function uploadLanguages() {
             const data = await import(`./data/localization/stringtabley_${lang}.json`, { assert: { type: "json" } })
             console.log(`2. Indexing lang ${lang} json`)
             const dataIndexed = data.default.stringtable.language.string.reduce((obj, { ['#text']: text, ...item }) => {
-                obj[item?.['@_locid']] = { ...item, text, active: 0 }
+                obj[item?.['@_locid']] = { 
+                    ...item, 
+                    text,
+                    homePage: 0,
+                    deckBuilder: 0,
+                    unitsPage: 0,
+                }
                 return obj
             }, {})
+
+            whiteList.forEach(val => {
+                dataIndexed[val] && (dataIndexed[val].homePage = 1)
+            })
+
+            deckBuilderList.forEach(val => {
+                dataIndexed[val] && (dataIndexed[val].deckBuilder = 1)
+            })
+
+            unitsPage.forEach(val => {
+                dataIndexed[val] && (dataIndexed[val].unitsPage = 1)
+            })
+
             const dbRef = ref(db, `localization/${lang}`)
             console.log(`Saving new values lang ${lang} to DB`)
             await set(dbRef, dataIndexed)
@@ -48,7 +70,7 @@ async function uploadLanguages() {
             console.log('===========================\n\n')
         }
     } catch (error) {
-        console.error(err)
+        console.error(error)
     }
 }
 
@@ -56,3 +78,4 @@ uploadLanguages().then(() => {
     console.log('Languages upload ended')
     process.exit()
 })
+
