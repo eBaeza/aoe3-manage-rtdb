@@ -54,7 +54,7 @@ generateSeed().then(() => {
 
 
 // JSON.stringify(
-//     [...new Set(
-//         Object.keys(window.translationsIds)
-//     )]
+//     [...new Set([
+//         ...Object.keys(window.translationsIds)
+//     ])]
 // )
