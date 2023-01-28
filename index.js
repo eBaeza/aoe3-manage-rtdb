@@ -29,7 +29,7 @@ if (process.env.NODE_ENV === 'development') {
     connectDatabaseEmulator(db, "localhost", 9000);
 }
 
-const langs = ['es', 'en', 'pt_br', 'zh', 'fr']
+const langs = ['es', 'en', 'pt_br', 'zh', 'fr', 'de']
 
 async function uploadLanguages() {
     try {

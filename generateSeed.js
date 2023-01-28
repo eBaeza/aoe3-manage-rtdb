@@ -2,7 +2,7 @@ import fs from 'fs'
 import whiteList from "./dbids/homePage.json" assert { type: 'json' };
 import deckBuilderList from "./dbids/deckBuilder.json" assert { type: 'json' };
 import unitsPage from "./dbids/unitsPage.json" assert { type: 'json' };
-const langs = ['es', 'en', 'pt_br', 'zh', 'fr']
+const langs = ['es', 'en', 'pt_br', 'zh', 'fr', 'de']
 
 async function generateSeed() {
     try {
