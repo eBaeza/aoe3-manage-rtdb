@@ -2,6 +2,7 @@ import fs from 'fs'
 import whiteList from "./dbids/homePage.json" assert { type: 'json' };
 import deckBuilderList from "./dbids/deckBuilder.json" assert { type: 'json' };
 import unitsPage from "./dbids/unitsPage.json" assert { type: 'json' };
+import nativesPage from "./dbids/nativesPage.json" assert { type: 'json' };
 const langs = ['es', 'en', 'pt_br', 'zh', 'fr', 'de']
 
 async function generateSeed() {
@@ -20,6 +21,7 @@ async function generateSeed() {
                     homePage: 0,
                     deckBuilder: 0,
                     unitsPage: 0,
+                    nativesPage: 0,
                 }
                 return obj
             }, {})
@@ -34,6 +36,10 @@ async function generateSeed() {
 
             unitsPage.forEach(val => {
                 dataIndexed[val] && (dataIndexed[val].unitsPage = 1)
+            })
+
+            nativesPage.forEach(val => {
+                dataIndexed[val] && (dataIndexed[val].nativesPage = 1)
             })
 
             seedData.localization[lang] = dataIndexed

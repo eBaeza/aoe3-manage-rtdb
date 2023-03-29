@@ -5,6 +5,7 @@ import { getDatabase, ref, set, connectDatabaseEmulator } from "firebase/databas
 import whiteList from "./dbids/homePage.json" assert { type: 'json' };
 import deckBuilderList from "./dbids/deckBuilder.json" assert { type: 'json' };
 import unitsPage from "./dbids/unitsPage.json" assert { type: 'json' };
+import nativesPage from "./dbids/nativesPage.json" assert { type: 'json' };
 
 dotEnvConfig()
 
@@ -47,6 +48,7 @@ async function uploadLanguages() {
                     homePage: 0,
                     deckBuilder: 0,
                     unitsPage: 0,
+                    nativesPage: 0
                 }
                 return obj
             }, {})
@@ -61,6 +63,10 @@ async function uploadLanguages() {
 
             unitsPage.forEach(val => {
                 dataIndexed[val] && (dataIndexed[val].unitsPage = 1)
+            })
+
+            nativesPage.forEach(val => {
+                dataIndexed[val] && (dataIndexed[val].nativesPage = 1)
             })
 
             const dbRef = ref(db, `localization/${lang}`)
