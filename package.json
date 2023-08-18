@@ -7,7 +7,7 @@
     "start": "node index.js",
     "gen:seed": "node generateSeed.js && npm run emulators",
     "dev": "cross-env NODE_ENV=development node index.js",
-    "emulators": "firebase emulators:start --only=database --import=./export --export-on-exit=./export",
+    "emulators": "firebase emulators:start --only \"database,auth\" --import=./export --export-on-exit=./export",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

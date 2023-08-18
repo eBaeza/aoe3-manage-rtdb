@@ -2,5 +2,6 @@
 .env
 /data/localization/*
 /export/database_export/*
+/export/auth_export/*
 *.log
 !/**/.gitkeep
