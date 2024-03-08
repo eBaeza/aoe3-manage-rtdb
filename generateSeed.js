@@ -4,6 +4,16 @@ import deckBuilderList from "./dbids/deckBuilder.json" assert { type: 'json' };
 import unitsPage from "./dbids/unitsPage.json" assert { type: 'json' };
 import nativesPage from "./dbids/nativesPage.json" assert { type: 'json' };
 const langs = ['es', 'en', 'pt_br', 'zh', 'zh_cn', 'fr', 'de', 'ja']
+const langsMap = {
+    'es': 'spanish',
+    'en': 'english',
+    'pt_br': 'portuguesebrazil',
+    'zh': 'traditionalchinese',
+    'zh_cn': 'simplifiedchinese',
+    'fr': 'french',
+    'de': 'german',
+    'ja': 'japanese'
+}
 
 async function generateSeed() {
     try {
@@ -11,7 +21,7 @@ async function generateSeed() {
         for (let lang of langs) {
             console.log('===========================')
             console.log(`1. Loading lang ${lang} json`)
-            const data = await import(`./data/localization/stringtabley_${lang}.json`, { assert: { type: "json" } })
+            const data = await import(`./data/localization/${langsMap[lang]}/stringtabley.xml.json`, { assert: { type: "json" } })
 
             console.log(`2. Indexing lang ${lang} json`)
             let dataIndexed = data.default.stringtable.language.string.reduce((obj, { ['#text']: text, ...item }) => {
@@ -25,6 +35,19 @@ async function generateSeed() {
                 }
                 return obj
             }, {})
+
+            // const dataReplaces = await import(`./data/localization/replaces/${langsMap[lang]}/stringmods.json`, { assert: { type: "json" } })
+            // dataIndexed = dataReplaces.default.stringmods.stringtable.language.string.reduce((obj, { ['#text']: text, ...item }) => {
+            //     obj[item?.['@_locid']] = {
+            //         ...item,
+            //         text,
+            //         homePage: 0,
+            //         deckBuilder: 0,
+            //         unitsPage: 0,
+            //         nativesPage: 0
+            //     }
+            //     return obj
+            // }, dataIndexed)
 
             whiteList.forEach(val => {
                 dataIndexed[val] && (dataIndexed[val].homePage = 1)

@@ -31,6 +31,16 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 const langs = ['es', 'en', 'pt_br', 'zh', 'zh_cn', 'fr', 'de', 'ja']
+const langsMap = {
+    'es': 'spanish',
+    'en': 'english',
+    'pt_br': 'portuguesebrazil',
+    'zh': 'traditionalchinese',
+    'zh_cn': 'simplifiedchinese',
+    'fr': 'french',
+    'de': 'german',
+    'ja': 'japanese'
+}
 
 async function uploadLanguages() {
     try {
@@ -39,11 +49,11 @@ async function uploadLanguages() {
         for (let lang of langs) {
             console.log('===========================')
             console.log(`1. Loading lang ${lang} json`)
-            const data = await import(`./data/localization/stringtabley_${lang}.json`, { assert: { type: "json" } })
+            const data = await import(`./data/localization/${langsMap[lang]}/stringtabley.xml.json`, { assert: { type: "json" } })
             console.log(`2. Indexing lang ${lang} json`)
-            const dataIndexed = data.default.stringtable.language.string.reduce((obj, { ['#text']: text, ...item }) => {
-                obj[item?.['@_locid']] = { 
-                    ...item, 
+            let dataIndexed = data.default.stringtable.language.string.reduce((obj, { ['#text']: text, ...item }) => {
+                obj[item?.['@_locid']] = {
+                    ...item,
                     text,
                     homePage: 0,
                     deckBuilder: 0,
@@ -52,6 +62,19 @@ async function uploadLanguages() {
                 }
                 return obj
             }, {})
+
+            // const dataReplaces = await import(`./data/localization/replaces/${langsMap[lang]}/stringmods.json`, { assert: { type: "json" } })
+            // dataIndexed = dataReplaces.default.stringmods.stringtable.language.string.reduce((obj, { ['#text']: text, ...item }) => {
+            //     obj[item?.['@_locid']] = {
+            //         ...item,
+            //         text,
+            //         homePage: 0,
+            //         deckBuilder: 0,
+            //         unitsPage: 0,
+            //         nativesPage: 0
+            //     }
+            //     return obj
+            // }, dataIndexed)
 
             whiteList.forEach(val => {
                 dataIndexed[val] && (dataIndexed[val].homePage = 1)

@@ -5,3 +5,4 @@
 /export/auth_export/*
 *.log
 !/**/.gitkeep
+/exported
