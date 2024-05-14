@@ -21,10 +21,10 @@ async function generateSeed() {
         for (let lang of langs) {
             console.log('===========================')
             console.log(`1. Loading lang ${lang} json`)
-            const data = await import(`./data/localization/${langsMap[lang]}/stringtabley.xml.json`, { assert: { type: "json" } })
+            const data = await import(`./data/localization/${langsMap[lang]}/stringtabley.json`, { assert: { type: "json" } })
 
             console.log(`2. Indexing lang ${lang} json`)
-            let dataIndexed = data.default.stringtable.language.string.reduce((obj, { ['#text']: text, ...item }) => {
+            let dataIndexed = data.default.language.string.reduce((obj, { ['#text']: text, ...item }) => {
                 obj[item?.['@_locid']] = {
                     symbol: item?.['@symbol']?.toLowerCase(),
                     text
