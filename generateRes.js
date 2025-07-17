@@ -1,8 +1,10 @@
-import fs from 'fs'
-import homePageList from "./dbids/homePage.json" assert { type: 'json' };
-import deckBuilderList from "./dbids/deckBuilder.json" assert { type: 'json' };
-import unitsPageList from "./dbids/unitsPage.json" assert { type: 'json' };
-import nativesPageList from "./dbids/nativesPage.json" assert { type: 'json' };
+import fs from 'fs';
+import homePageList from "./dbids/homePage.json" with {type: 'json'};
+import deckBuilderList from "./dbids/deckBuilder.json" with {type: 'json'};
+import unitsPageList from "./dbids/unitsPage.json" with {type: 'json'};
+import nativesPageList from "./dbids/nativesPage.json" with {type: 'json'};
+import dataAOW from './data/mods/aow/english/stringmods.json' with {type: 'json'};
+
 const langs = ['es', 'en', 'pt-BR', 'zh-TW', 'zh-CN', 'fr', 'de', 'ja', 'tr']
 const langsMap = {
     'es': 'spanish',
@@ -18,10 +20,29 @@ const langsMap = {
 
 async function generateSeed() {
     try {
+        const dataAOWIndexed = dataAOW.stringmods.StringTable.Language.string.reduce((obj, { ['#text']: text, ...item }) => {
+            obj[item?.['@_locid']] = text
+
+            if(item?.['@symbol'])
+                obj[item?.['@symbol']?.toLowerCase()] = text
+
+            return obj
+        }, {})
+
+
+        fs.mkdir(`./exported/aow`, { recursive: true }, (err) => {
+            if (err) throw err;
+        });
+
+        fs.writeFile(`./exported/aow/aow.json`, JSON.stringify(dataAOWIndexed), (err) => {
+            if (err) throw err;
+            console.log(`Data written to file ./exported/aow/aow.json`);
+        });
+
         for (let lang of langs) {
             console.log('===========================')
             console.log(`1. Loading lang ${lang} json`)
-            const data = await import(`./data/localization/${langsMap[lang]}/stringtabley.json`, { assert: { type: "json" } })
+            const data = await import(`./data/localization/${langsMap[lang]}/stringtabley.json`, { with: { type: "json" } })
 
             console.log(`2. Indexing lang ${lang} json`)
             let dataIndexed = data.default.language.string.reduce((obj, { ['#text']: text, ...item }) => {
@@ -31,6 +52,16 @@ async function generateSeed() {
                 }
                 return obj
             }, {})
+
+            const dataReplaces = await import(`./data/datapatch/${langsMap[lang]}/stringmods.json`, { with: { type: "json" } })
+            dataIndexed = dataReplaces.default.stringmods.stringtable.language.string.reduce((obj, { ['#text']: text, ...item }) => {
+                obj[item?.['@_locid']] = {
+                    ...item,
+                    text
+                }
+                return obj
+            }, dataIndexed)
+
 
             let homePage = {}
             let deckBuilder = {}
